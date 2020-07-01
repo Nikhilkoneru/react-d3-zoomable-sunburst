@@ -1,24 +1,44 @@
 {
   "name": "react-d3-zoomable-sunburst",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.1",
+  "private": false,
+  "babel": {
+    "presets": [
+      "@babel/preset-react",
+      "@babel/preset-env"
+    ]
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nikhilkoneru/react-d3-zoomable-sunburst.git"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "d3": "^5.16.0",
+    "lodash": "^4.17.15"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "rm -rf dist && NODE_ENV=production babel src/ --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,__snapshots__"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
+  "keywords": [
+    "react",
+    "sunburst",
+    "zoomable",
+    "tooltip",
+    "d3",
+    "v4"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
@@ -30,5 +50,22 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1"
+  },
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "Nikhil Koneru",
+      "email": "nikhil.konerus@gmail.com"
+    }
+  ],
+  "author": {
+    "name": "Nikhil Koneru"
   }
 }
