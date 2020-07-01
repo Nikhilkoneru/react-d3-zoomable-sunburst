@@ -1,6 +1,6 @@
 {
   "name": "react-d3-zoomable-sunburst",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "private": false,
   "babel": {
     "presets": [
@@ -33,11 +33,12 @@
   },
   "keywords": [
     "react",
+    "plots",
+    "circle",
     "sunburst",
     "zoomable",
     "tooltip",
-    "d3",
-    "v4"
+    "d3"
   ],
   "browserslist": {
     "production": [
