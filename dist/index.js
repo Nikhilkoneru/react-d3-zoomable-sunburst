@@ -13,7 +13,7 @@ var _lang = require("lodash/lang");
 
 var d3 = _interopRequireWildcard(require("d3"));
 
-var utils = _interopRequireWildcard(require("./utils/utils.js"));
+var utils = _interopRequireWildcard(require("./utils"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -26,19 +26,6 @@ function usePrevious(value) {
   });
   return ref.current;
 }
-/**
- * Sunburst Chart React Stateless Component with the following allowable Props *
- * data => JSON Array - Typically same for every Sunburst Chart *
- * scale => String - Options: linear | exponential - Linear renders each arc with same radii, Exponential reduces gradually by SquareRoot *
- * onSelect => Function - Called on Arc Click for re-rendering the chart and passing back to User as props *
- * tooltip => Boolean - Display Tooltip or not *
- * tooltipContent => HTMLNode - Customized Node for Tooltip rendering *
- * keyId => String - Unique Id for Chart SVG *
- * width => Integer - Width of the Chart Container *
- * height => Integer - Height of the Chart Container *
- * value => Value to use to build this Chart *
- */
-
 
 var Sunburst = function Sunburst(props) {
   var svgRef = (0, _react.useRef)();
@@ -46,7 +33,8 @@ var Sunburst = function Sunburst(props) {
   (0, _react.useEffect)(function () {
     if (!(0, _lang.isEqual)(prevProps, props)) {
       renderSunburst();
-    }
+    } // eslint-disable-next-line
+
   }, [props]);
 
   var arcTweenData = function arcTweenData(a, i, node, x, arc) {

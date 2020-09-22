@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {isEqual} from 'lodash/lang';
 import * as d3 from 'd3';
-import * as utils from './utils/utils.js';
+import * as utils from './utils';
 
 function usePrevious(value) {
     const ref = useRef();
@@ -10,19 +10,6 @@ function usePrevious(value) {
     });
     return ref.current;
 }
-
-/**
- * Sunburst Chart React Stateless Component with the following allowable Props *
- * data => JSON Array - Typically same for every Sunburst Chart *
- * scale => String - Options: linear | exponential - Linear renders each arc with same radii, Exponential reduces gradually by SquareRoot *
- * onSelect => Function - Called on Arc Click for re-rendering the chart and passing back to User as props *
- * tooltip => Boolean - Display Tooltip or not *
- * tooltipContent => HTMLNode - Customized Node for Tooltip rendering *
- * keyId => String - Unique Id for Chart SVG *
- * width => Integer - Width of the Chart Container *
- * height => Integer - Height of the Chart Container *
- * value => Value to use to build this Chart *
- */
 const Sunburst = (props) => {
     const svgRef = useRef()
     const prevProps = usePrevious(props);
@@ -30,6 +17,7 @@ const Sunburst = (props) => {
         if (!isEqual(prevProps, props)) {
             renderSunburst();
         }
+        // eslint-disable-next-line
     }, [props])
 
     const arcTweenData = (a, i, node, x, arc) => {  // eslint-disable-line
@@ -173,4 +161,4 @@ const Sunburst = (props) => {
         </div>
     );
 }
-export default Sunburst;
+export default Sunburst
