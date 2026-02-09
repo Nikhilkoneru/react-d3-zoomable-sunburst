@@ -14,3 +14,24 @@ npm i react-d3-zoomable-sunburst
 1) git clone https://github.com/Nikhilkoneru/react-d3-zoomable-sunburst
 2) cd example
 3) npm run start
+
+### Labels
+
+You can display labels directly on the sunburst arcs by passing a `labelFunc` prop. Labels are only shown on arcs large enough to fit text.
+
+```jsx
+<Sunburst
+    data={data}
+    value="size"
+    width={600}
+    height={600}
+    keyId="sunburst"
+    labelFunc={(d) => d.data.name}
+    labelSize="11px"
+/>
+```
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `labelFunc` | `function` | A function receiving a D3 hierarchy node and returning the label string. When provided, labels are rendered on the arcs. |
+| `labelSize` | `string` | Font size for labels (default: `'10px'`). |

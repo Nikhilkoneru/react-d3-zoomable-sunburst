@@ -40,6 +40,17 @@ const Sunburst = (props) => {
             return tween;
         }
     }
+    const arcVisible = (d, x) => { // eslint-disable-line
+        return d.y1 <= 3 && d.y0 >= 1 && x(d.x1) > x(d.x0) + 0.01;
+    }
+    const labelVisible = (d, x) => { // eslint-disable-line
+        return d.y1 <= 3 && d.y0 >= 1 && (x(d.x1) - x(d.x0)) > 0.12;
+    }
+    const labelTransform = (d, x, y) => { // eslint-disable-line
+        const angle = (x(d.x0) + x(d.x1)) / 2 * 180 / Math.PI;
+        const r = Math.max(0, (y(d.y0) + y(d.y1)) / 2);
+        return `rotate(${angle - 90}) translate(${r},0) rotate(${angle < 180 ? 0 : 180})`;
+    }
     const update = (root, firstBuild, svg, partition, hueDXScale, x, y, radius, arc, node) => {  // eslint-disable-line
         if (firstBuild) {
             function arcTweenZoom(d) {
@@ -60,7 +71,14 @@ const Sunburst = (props) => {
             function click(d) { // eslint-disable-line
                 node = d; // eslint-disable-line
                 props.onSelect && props.onSelect(d);
-                svg.selectAll('path').transition().duration(1000).attrTween('d', arcTweenZoom(d));
+                svg.selectAll('path').transition().duration(1000).attrTween('d', arcTweenZoom(d))
+                    .on('end', function () {
+                        if (props.labelFunc) {
+                            svg.selectAll('text')
+                                .attr('transform', function (dd) { return labelTransform(dd, x, y); })
+                                .style('fill-opacity', function (dd) { return +labelVisible(dd, x); });
+                        }
+                    });
             }
 
             const tooltipContent = props.tooltipContent;
@@ -121,6 +139,16 @@ const Sunburst = (props) => {
                     }
                     return null;
                 });
+            if (props.labelFunc) {
+                svg.selectAll('text').data(partition(root).descendants()).enter().append('text')
+                    .attr('transform', d => labelTransform(d, x, y))
+                    .attr('dy', '0.35em')
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', props.labelSize || '10px')
+                    .style('fill-opacity', d => +labelVisible(d, x))
+                    .style('pointer-events', 'none')
+                    .text(d => props.labelFunc(d));
+            }
         } else {
             svg.selectAll('path').data(partition(root).descendants());
         }
