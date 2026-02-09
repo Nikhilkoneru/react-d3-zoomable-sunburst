@@ -2,7 +2,8 @@ name: Publish to npm
 
 on:
   push:
-    branches: [main]
+    tags:
+      - 'v*'
 
 jobs:
   publish:
@@ -20,6 +21,14 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org
           cache: npm
+
+      - name: Verify tag matches package.json version
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$PKG_VERSION" != "${{ github.ref_name }}" ]; then
+            echo "Tag ${{ github.ref_name }} does not match package.json version $PKG_VERSION"
+            exit 1
+          fi
 
       - name: Install dependencies
         run: npm ci
