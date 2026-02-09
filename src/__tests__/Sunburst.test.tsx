@@ -1,8 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
-import Sunburst from '../index.jsx';
+import Sunburst from '../index';
+import type { SunburstDataNode } from '../index';
 
-const sampleData = {
+const sampleData: SunburstDataNode = {
     name: 'root',
     children: [
         {
@@ -46,8 +47,8 @@ describe('Sunburst', () => {
         );
         const svg = container.querySelector('svg');
         expect(svg).toBeInTheDocument();
-        expect(svg.style.width).toBe('600px');
-        expect(svg.style.height).toBe('500px');
+        expect(svg!.style.width).toBe('600px');
+        expect(svg!.style.height).toBe('500px');
     });
 
     it('renders with null data without crashing', () => {

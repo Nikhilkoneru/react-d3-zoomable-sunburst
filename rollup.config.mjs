@@ -1,10 +1,10 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import babel from '@rollup/plugin-babel';
+import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
 
 export default {
-  input: 'src/index.jsx',
+  input: 'src/index.tsx',
   output: [
     {
       file: 'dist/index.cjs.js',
@@ -20,10 +20,10 @@ export default {
   ],
   external: ['react', 'react-dom', 'react/jsx-runtime'],
   plugins: [
-    babel({
-      babelHelpers: 'bundled',
-      presets: ['@babel/preset-env', ['@babel/preset-react', { runtime: 'automatic' }]],
-      exclude: 'node_modules/**',
+    typescript({
+      tsconfig: './tsconfig.json',
+      declaration: true,
+      declarationDir: 'dist',
     }),
     resolve(),
     commonjs(),
