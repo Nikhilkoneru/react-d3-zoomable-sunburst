@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import Sunburst from '../index';
 import type { SunburstDataNode } from '../index';
 
@@ -106,5 +106,31 @@ describe('Sunburst', () => {
             />
         );
         expect(colorFunc).toHaveBeenCalled();
+    });
+
+    it('renders with onMouseover and onMouseout callbacks', () => {
+        const onMouseover = vi.fn();
+        const onMouseout = vi.fn();
+        const { container } = render(
+            <Sunburst
+                data={sampleData}
+                value="size"
+                width={480}
+                height={400}
+                keyId="test-mouse-callbacks"
+                onMouseover={onMouseover}
+                onMouseout={onMouseout}
+            />
+        );
+        expect(container.querySelector('#test-mouse-callbacks')).toBeInTheDocument();
+        const paths = container.querySelectorAll('path');
+        expect(paths.length).toBeGreaterThan(0);
+
+        // Simulate mouse events on a path element
+        fireEvent.mouseOver(paths[1]);
+        expect(onMouseover).toHaveBeenCalled();
+
+        fireEvent.mouseOut(paths[1]);
+        expect(onMouseout).toHaveBeenCalled();
     });
 });
