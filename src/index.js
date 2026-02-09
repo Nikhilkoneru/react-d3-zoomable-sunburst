@@ -76,6 +76,9 @@ const Sunburst = (props) => {
             }
             svg.selectAll('path').data(partition(root).descendants()).enter().append('path')
                 .style('fill', (d) => {
+                    if (props.colorFunc) {
+                        return props.colorFunc(d);
+                    }
                     let hue;
                     const current = d;
                     if (current.depth === 0) {
@@ -108,9 +111,15 @@ const Sunburst = (props) => {
                 })
                 .on('mousemove', () => {
                     if (props.tooltip) {
-                        tooltip
-                            .style('top', `${d3.event.pageY - 50}px`)
-                            .style('left', `${props.tooltipPosition === 'right' ? d3.event.pageX - 100 : d3.event.pageX - 50}px`);
+                        const containerEl = document.getElementById(props.keyId);
+                        if (containerEl) {
+                            const rect = containerEl.getBoundingClientRect();
+                            const xPos = d3.event.clientX - rect.left;
+                            const yPos = d3.event.clientY - rect.top;
+                            tooltip
+                                .style('top', `${yPos - 50}px`)
+                                .style('left', `${props.tooltipPosition === 'right' ? xPos - 100 : xPos - 50}px`);
+                        }
                     }
                     return null;
                 })
@@ -155,7 +164,7 @@ const Sunburst = (props) => {
     }
 
     return (
-        <div id={props.keyId} className="text-center">
+        <div id={props.keyId} className="text-center" style={{position: 'relative'}}>
             <svg ref={svgRef} style={{width: parseInt(props.width, 10) || 480, height: parseInt(props.height, 10) || 400}}
                  id={`${props.keyId}-svg`}/>
         </div>
