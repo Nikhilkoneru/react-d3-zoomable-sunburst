@@ -100,8 +100,15 @@ const Sunburst = props => {
         });
       }
       svg.selectAll('path').data(partition(root).descendants()).enter().append('path').style('fill', d => {
+        if (props.colorFunc) {
+          return props.colorFunc(d);
+        }
         let hue;
         const current = d;
+        if (current.data.color) {
+          current.fill = d3.hsl(current.data.color);
+          return current.data.color;
+        }
         if (current.depth === 0) {
           return '#33cccc';
         }
@@ -127,7 +134,13 @@ const Sunburst = props => {
         return null;
       }).on('mousemove', () => {
         if (props.tooltip) {
-          tooltip.style('top', "".concat(d3.event.pageY - 50, "px")).style('left', "".concat(props.tooltipPosition === 'right' ? d3.event.pageX - 100 : d3.event.pageX - 50, "px"));
+          const containerEl = document.getElementById(props.keyId);
+          if (containerEl) {
+            const rect = containerEl.getBoundingClientRect();
+            const xPos = d3.event.clientX - rect.left;
+            const yPos = d3.event.clientY - rect.top;
+            tooltip.style('top', "".concat(yPos - 50, "px")).style('left', "".concat(props.tooltipPosition === 'right' ? xPos - 100 : xPos - 50, "px"));
+          }
         }
         return null;
       }).on('mouseout', function () {
@@ -170,6 +183,7 @@ const Sunburst = props => {
     ref: containerRef,
     className: "text-center",
     style: {
+      position: 'relative',
       width: '100%',
       height: '100%'
     }
