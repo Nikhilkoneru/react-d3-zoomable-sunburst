@@ -81,6 +81,10 @@ const Sunburst = (props) => {
                     }
                     let hue;
                     const current = d;
+                    if (current.data.color) {
+                        current.fill = d3.hsl(current.data.color);
+                        return current.data.color;
+                    }
                     if (current.depth === 0) {
                         return '#33cccc';
                     }
