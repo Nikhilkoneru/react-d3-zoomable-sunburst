@@ -64,6 +64,8 @@ function App() {
 | `tooltipContent` | `React.ReactElement` | No | Custom React element used as the tooltip container |
 | `scale` | `'linear' \| 'exponential'` | No | Scale type (default: exponential/sqrt) |
 | `onSelect` | `(d: HierarchyRectangularNode<SunburstDataNode>) => void` | No | Callback invoked when a segment is clicked |
+| `onMouseover` | `(d: HierarchyRectangularNode<SunburstDataNode>) => void` | No | Callback invoked when the mouse enters a segment |
+| `onMouseout` | `(d: HierarchyRectangularNode<SunburstDataNode>) => void` | No | Callback invoked when the mouse leaves a segment |
 | `colorFunc` | `(d: HierarchyRectangularNode<SunburstDataNode>) => string` | No | Custom color function to control the fill color of each segment |
 
 ## TypeScript

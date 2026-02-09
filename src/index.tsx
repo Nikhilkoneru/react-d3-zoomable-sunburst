@@ -40,6 +40,10 @@ export interface SunburstProps {
     scale?: 'linear' | 'exponential';
     /** Callback invoked when a segment is clicked. */
     onSelect?: (d: HierarchyRectangularNode<SunburstDataNode>) => void;
+    /** Callback invoked when the mouse enters a segment. */
+    onMouseover?: (d: HierarchyRectangularNode<SunburstDataNode>) => void;
+    /** Callback invoked when the mouse leaves a segment. */
+    onMouseout?: (d: HierarchyRectangularNode<SunburstDataNode>) => void;
     /** Custom color function to control fill color of each segment. */
     colorFunc?: (d: HierarchyRectangularNode<SunburstDataNode>) => string;
 }
@@ -55,6 +59,8 @@ const Sunburst: React.FC<SunburstProps> = ({
     tooltipContent,
     scale,
     onSelect,
+    onMouseover,
+    onMouseout,
     colorFunc,
 }) => {
     const svgRef = useRef<SVGSVGElement>(null);
@@ -197,6 +203,7 @@ const Sunburst: React.FC<SunburstProps> = ({
                     tooltip.html(formatNameTooltip(d));
                     tooltip.transition().duration(50).style('opacity', 1);
                 }
+                if (onMouseover) onMouseover(d);
             })
             .on('mousemove', (event: MouseEvent) => {
                 if (showTooltip) {
@@ -211,11 +218,12 @@ const Sunburst: React.FC<SunburstProps> = ({
                     }
                 }
             })
-            .on('mouseout', function (this: SVGPathElement) {
+            .on('mouseout', function (this: SVGPathElement, _event: MouseEvent, d: SunburstNode) {
                 if (showTooltip) {
                     d3.select(this).style('cursor', 'default');
                     tooltip.transition().duration(50).style('opacity', 0);
                 }
+                if (onMouseout) onMouseout(d);
             });
 
         // Initial animation
@@ -223,7 +231,7 @@ const Sunburst: React.FC<SunburstProps> = ({
             .transition()
             .duration(1000)
             .attrTween('d', (d: SunburstNode, i: number) => arcTweenData(d, i));
-    }, [data, value, width, height, keyId, showTooltip, tooltipPosition, tooltipContent, scale, onSelect, colorFunc]);
+    }, [data, value, width, height, keyId, showTooltip, tooltipPosition, tooltipContent, scale, onSelect, onMouseover, onMouseout, colorFunc]);
 
     useEffect(() => {
         renderSunburst();
