@@ -58,7 +58,6 @@ const Sunburst: React.FC<SunburstProps> = ({
     colorFunc,
 }) => {
     const svgRef = useRef<SVGSVGElement>(null);
-    const dataRef = useRef<string | undefined>(undefined);
 
     const renderSunburst = useCallback(() => {
         if (!data) return;
@@ -227,14 +226,8 @@ const Sunburst: React.FC<SunburstProps> = ({
     }, [data, value, width, height, keyId, showTooltip, tooltipPosition, tooltipContent, scale, onSelect, colorFunc]);
 
     useEffect(() => {
-        const serialized = JSON.stringify(data);
-        if (dataRef.current !== serialized) {
-            dataRef.current = serialized;
-            renderSunburst();
-        } else {
-            renderSunburst();
-        }
-    }, [renderSunburst, data]);
+        renderSunburst();
+    }, [renderSunburst]);
 
     return (
         <div id={keyId} style={{ position: 'relative' }}>
