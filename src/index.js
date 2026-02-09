@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {isEqual} from 'lodash/lang';
 import * as d3 from 'd3';
 import * as utils from './utils';
@@ -12,13 +12,30 @@ function usePrevious(value) {
 }
 const Sunburst = (props) => {
     const svgRef = useRef()
+    const containerRef = useRef()
+    const [containerSize, setContainerSize] = useState(null)
     const prevProps = usePrevious(props);
+    const prevContainerSize = usePrevious(containerSize);
     useEffect(() => {
-        if (!isEqual(prevProps, props)) {
+        if (!isEqual(prevProps, props) || !isEqual(prevContainerSize, containerSize)) {
             renderSunburst();
         }
         // eslint-disable-next-line
-    }, [props])
+    }, [props, containerSize])
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const { width, height } = entry.contentRect;
+                if (width > 0 && height > 0) {
+                    setContainerSize({ width, height });
+                }
+            }
+        });
+        observer.observe(containerRef.current);
+        return () => observer.disconnect();
+    }, [])
 
     const arcTweenData = (a, i, node, x, arc) => {  // eslint-disable-line
         const oi = d3.interpolate({x0: (a.x0s ? a.x0s : 0), x1: (a.x1s ? a.x1s : 0)}, a);
@@ -131,8 +148,8 @@ const Sunburst = (props) => {
             document.querySelectorAll("g").forEach((node) => {
                 node.remove()
             })
-            const gWidth = props.width
-            const gHeight = props.height
+            const gWidth = containerSize ? containerSize.width : props.width
+            const gHeight = containerSize ? containerSize.height : props.height
             const radius = (Math.min(gWidth, gHeight) / 2) - 10
             const svg = d3.select(svgRef.current).append('g').attr('transform', `translate(${gWidth / 2},${gHeight / 2})`)
             const x = d3.scaleLinear().range([0, 2 * Math.PI])
@@ -154,9 +171,12 @@ const Sunburst = (props) => {
         }
     }
 
+    const svgWidth = containerSize ? containerSize.width : (parseInt(props.width, 10) || 480)
+    const svgHeight = containerSize ? containerSize.height : (parseInt(props.height, 10) || 400)
+
     return (
-        <div id={props.keyId} className="text-center">
-            <svg ref={svgRef} style={{width: parseInt(props.width, 10) || 480, height: parseInt(props.height, 10) || 400}}
+        <div id={props.keyId} ref={containerRef} className="text-center" style={{width: '100%', height: '100%'}}>
+            <svg ref={svgRef} style={{width: svgWidth, height: svgHeight}}
                  id={`${props.keyId}-svg`}/>
         </div>
     );
