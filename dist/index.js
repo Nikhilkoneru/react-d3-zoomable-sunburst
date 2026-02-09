@@ -102,6 +102,10 @@ var Sunburst = function Sunburst(props) {
       }
 
       svg.selectAll('path').data(partition(root).descendants()).enter().append('path').style('fill', function (d) {
+        if (props.colorFunc) {
+          return props.colorFunc(d);
+        }
+
         var hue;
         var current = d;
 
@@ -135,7 +139,13 @@ var Sunburst = function Sunburst(props) {
         return null;
       }).on('mousemove', function () {
         if (props.tooltip) {
-          tooltip.style('top', "".concat(d3.event.pageY - 50, "px")).style('left', "".concat(props.tooltipPosition === 'right' ? d3.event.pageX - 100 : d3.event.pageX - 50, "px"));
+          var containerEl = document.getElementById(props.keyId);
+          if (containerEl) {
+            var rect = containerEl.getBoundingClientRect();
+            var xPos = d3.event.clientX - rect.left;
+            var yPos = d3.event.clientY - rect.top;
+            tooltip.style('top', "".concat(yPos - 50, "px")).style('left', "".concat(props.tooltipPosition === 'right' ? xPos - 100 : xPos - 50, "px"));
+          }
         }
 
         return null;
@@ -190,7 +200,10 @@ var Sunburst = function Sunburst(props) {
 
   return /*#__PURE__*/_react.default.createElement("div", {
     id: props.keyId,
-    className: "text-center"
+    className: "text-center",
+    style: {
+      position: 'relative'
+    }
   }, /*#__PURE__*/_react.default.createElement("svg", {
     ref: svgRef,
     style: {
