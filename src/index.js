@@ -40,9 +40,6 @@ const Sunburst = (props) => {
             return tween;
         }
     }
-    const arcVisible = (d, x) => { // eslint-disable-line
-        return d.y1 <= 3 && d.y0 >= 1 && x(d.x1) > x(d.x0) + 0.01;
-    }
     const labelVisible = (d, x) => { // eslint-disable-line
         return d.y1 <= 3 && d.y0 >= 1 && (x(d.x1) - x(d.x0)) > 0.12;
     }
